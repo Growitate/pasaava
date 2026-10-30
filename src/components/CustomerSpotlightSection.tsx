@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Sparkles } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { customerSpotlights } from '../data/customerFeatures';
 
 const InstagramIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' }) => (
@@ -29,20 +29,16 @@ export const CustomerSpotlightSection: React.FC<CustomerSpotlightSectionProps> =
   onNavigate
 }) => {
   return (
-    <section className="py-20 md:py-28 bg-[#f8f6f3] border-t border-[#e8e8e8]">
+    <section className="py-16 md:py-24 bg-white border-t border-[#E5E5E5]">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div className="space-y-3">
-            <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-[#b9836a]">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Community & Real Styling</span>
-            </div>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1c1c1a]">
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#111111]">
               Featured Men of PASAAVA
             </h2>
-            <p className="text-sm sm:text-base text-[#6d6a67] max-w-lg">
-              Styled by creators, athletes, and architects across the globe. Tag <strong className="text-[#1c1c1a]">@pasaava</strong> to be featured in our upcoming gallery spotlight.
+            <p className="text-sm font-normal text-[#6B6B6B] max-w-lg leading-relaxed">
+              Styled by creators, athletes, and architects across the globe. Tag <strong className="text-[#111111] font-medium">@pasaava</strong> to be featured in our upcoming gallery spotlight.
             </p>
           </div>
 
@@ -50,9 +46,9 @@ export const CustomerSpotlightSection: React.FC<CustomerSpotlightSectionProps> =
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-white border border-[#e0e0e0] px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#1c1c1a] hover:border-[#1c1c1a] hover:bg-[#fafaf7] transition-all shadow-xs self-start md:self-auto"
+            className="inline-flex items-center gap-2 bg-white border border-[#E5E5E5] px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#111111] hover:bg-[#111111] hover:text-white transition-all shadow-xs self-start md:self-auto cursor-pointer"
           >
-            <InstagramIcon className="w-4 h-4 text-[#b9836a]" />
+            <InstagramIcon className="w-4 h-4" />
             <span>Follow @pasaava</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </a>
@@ -68,7 +64,7 @@ export const CustomerSpotlightSection: React.FC<CustomerSpotlightSectionProps> =
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: idx * 0.08 }}
               onClick={() => onNavigate(`/product/${spotlight.productSlug}`)}
-              className="group relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#e0ded8] shadow-sm cursor-pointer border border-[#e8e8e8]"
+              className="group relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#F3F3F3] shadow-xs cursor-pointer border border-[#E5E5E5]"
             >
               <img
                 src={spotlight.image}
@@ -76,23 +72,23 @@ export const CustomerSpotlightSection: React.FC<CustomerSpotlightSectionProps> =
                 loading="lazy"
                 className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
               {/* Overlay Details */}
               <div className="absolute inset-x-3 bottom-3 text-white transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                <span className="text-[10px] text-[#b9836a] font-medium block">
+                <span className="text-[10px] text-white/80 font-medium block">
                   {spotlight.handle}
                 </span>
-                <h4 className="text-xs font-semibold leading-tight truncate">
+                <h4 className="text-xs font-semibold leading-tight truncate text-white">
                   {spotlight.name}
                 </h4>
-                <p className="text-[11px] text-white/80 truncate mt-0.5">
+                <p className="text-[11px] text-white/80 truncate mt-0.5 font-light">
                   wearing {spotlight.productTitle}
                 </p>
               </div>
 
               {/* Floating Instagram Icon */}
-              <div className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-[#1c1c1a] opacity-80 group-hover:opacity-100 group-hover:bg-white transition-all shadow-xs">
+              <div className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-white border border-white/10 opacity-80 group-hover:opacity-100 group-hover:bg-white group-hover:text-black transition-all shadow-xs">
                 <InstagramIcon className="w-3.5 h-3.5" />
               </div>
             </motion.div>
@@ -100,19 +96,19 @@ export const CustomerSpotlightSection: React.FC<CustomerSpotlightSectionProps> =
         </div>
 
         {/* Callout Footer */}
-        <div className="mt-12 bg-white rounded-3xl p-6 sm:p-8 border border-[#e8e8e8] flex flex-col sm:flex-row items-center justify-between gap-6 shadow-sm">
+        <div className="mt-12 bg-[#F5F5F5] rounded-3xl p-6 sm:p-8 border border-[#E5E5E5] flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs">
           <div className="space-y-1 text-center sm:text-left">
-            <h4 className="font-serif text-xl sm:text-2xl font-light text-[#1c1c1a]">
+            <h4 className="font-serif text-xl sm:text-2xl font-normal text-[#111111]">
               Join the PASAAVA Movement
             </h4>
-            <p className="text-xs sm:text-sm text-[#6d6a67]">
-              Share your personal styling with <span className="font-semibold text-[#1c1c1a]">#PasaavaMen</span> on Instagram for early access to private drops.
+            <p className="text-xs sm:text-sm font-light text-[#6B6B6B]">
+              Share your personal styling with <span className="font-semibold text-[#111111]">#PasaavaMen</span> on Instagram for early access to private drops.
             </p>
           </div>
 
           <button
             onClick={() => onNavigate('/shop')}
-            className="flex-shrink-0 bg-[#1c1c1a] text-white px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-black transition-transform active:scale-95 shadow-sm"
+            className="flex-shrink-0 bg-[#111111] text-white px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-[#333333] transition-all active:scale-95 shadow-sm cursor-pointer"
           >
             Shop Featured Looks
           </button>

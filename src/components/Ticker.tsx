@@ -13,28 +13,24 @@ export const Ticker: React.FC<TickerProps> = ({ dark = false }) => {
     { text: 'Engineered for the Modern Man', icon: Sparkles },
     { text: 'Gym, Ocean & Shower Safe', icon: Dumbbell },
     { text: 'Complimentary Luxury Keepsake Box', icon: Sparkles },
-    { text: 'Free Worldwide Shipping Over $75', icon: Truck },
+    { text: 'Free Express Shipping Across India Over ₹999', icon: Truck },
     { text: 'Hypoallergenic & Nickel-Free', icon: Shield }
   ];
 
   return (
     <div
-      className={`py-4 overflow-hidden border-y select-none ${
-        dark
-          ? 'bg-[#16181c] border-[#232529] text-white'
-          : 'bg-[#fafaf7] border-[#e8e8e8] text-[#1c1c1a]'
-      }`}
+      className="py-3.5 sm:py-4 overflow-hidden border-y border-[#E5E5E5] bg-[#F5F5F5] text-[#111111] select-none"
     >
       <div className="flex w-max animate-marquee space-x-8 items-center">
         {[...items, ...items].map((item, idx) => {
           const Icon = item.icon;
           return (
             <div key={idx} className="flex items-center space-x-3 flex-shrink-0">
-              <Icon className="w-3.5 h-3.5 text-[#b9836a]" />
-              <span className="text-xs sm:text-sm font-medium tracking-wide uppercase">
+              <Icon className="w-3.5 h-3.5 text-[#111111]" />
+              <span className="text-xs sm:text-sm font-medium tracking-wide uppercase text-[#111111]">
                 {item.text}
               </span>
-              <span className="text-[#b9836a] opacity-40 px-2">•</span>
+              <span className="text-[#111111] opacity-30 px-2">•</span>
             </div>
           );
         })}

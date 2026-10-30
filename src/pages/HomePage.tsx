@@ -1,18 +1,13 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, Star, ShieldCheck, Check, Droplets } from 'lucide-react';
+import React, { useRef, useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { HeroSection } from '../components/HeroSection';
-import { Ticker } from '../components/Ticker';
+import { CategoryCircleSlider } from '../components/CategoryCircleSlider';
 import { ProductCard } from '../components/ProductCard';
-import { GenderSplitSection } from '../components/GenderSplitSection';
-import { BrandStorySection } from '../components/BrandStorySection';
-import { CustomerSpotlightSection } from '../components/CustomerSpotlightSection';
-import { NewsletterSection } from '../components/NewsletterSection';
-import { Accordion } from '../components/Accordion';
-import { products, getFeaturedProducts, getNewArrivals } from '../data/products';
-import { faqs } from '../data/faqs';
+import { ReelsStoriesCarousel } from '../components/ReelsStoriesCarousel';
+import { CustomerReviewsCarousel } from '../components/CustomerReviewsCarousel';
+import { storageService } from '../services/storageService';
+import { seoService } from '../services/seoService';
 import { Product } from '../types';
-import { useCurrency } from '../context/CurrencyContext';
 
 interface HomePageProps {
   onQuickView: (product: Product) => void;
@@ -23,295 +18,176 @@ export const HomePage: React.FC<HomePageProps> = ({
   onQuickView,
   onNavigate
 }) => {
-  const { formatPrice } = useCurrency();
-  const bestSellers = getFeaturedProducts();
-  const newArrivals = getNewArrivals();
+  const [products, setProducts] = useState<Product[]>(() => storageService.getProducts());
 
-  const [activeTab, setActiveTab] = useState<'All' | 'Chains' | 'Bracelets' | 'Rings' | 'Earrings'>('All');
+  useEffect(() => {
+    seoService.applyMeta({
+      title: "PASAAVA | Engineered Men's Jewellery | 316L Surgical Steel",
+      description:
+        'Engineered for the modern icon. Handcrafted luxury men’s jewellery made from 100% waterproof 316L surgical stainless steel. Hypoallergenic, tarnish-proof, lifetime durability.',
+      canonical: 'https://pasaava.growithcp.live/#/',
+      ogType: 'website',
+      jsonLd: seoService.buildOrganizationJsonLd()
+    });
 
-  const exploreProducts = activeTab === 'All'
-    ? products.slice(0, 8)
-    : products.filter(p => p.category.toLowerCase().includes(activeTab.toLowerCase())).slice(0, 8);
+    return storageService.subscribe(() => {
+      setProducts(storageService.getProducts());
+    });
+  }, []);
 
-  const testimonials = [
-    {
-      author: 'Marcus Vance',
-      role: 'Architect & Collector',
-      comment: 'The weight, beveled edge polish, and solid surgical steel feel of the Atlas Cuban Chain easily rival bespoke jewelry houses five times the price.',
-      stars: 5,
-      product: 'Atlas Cuban Chain'
-    },
-    {
-      author: 'Alexander Cole',
-      role: 'Creative Director & Horologist',
-      comment: 'Finally, men\'s jewelry that actually survives daily showers, heavy gym workouts, and travel without green discoloration. PASAAVA is unmatched.',
-      stars: 5,
-      product: 'Titan Link Bracelet'
-    },
-    {
-      author: 'Noah Bennett',
-      role: 'Industrial Designer',
-      comment: 'The Atlas Signet Ring and Knox Rope Bracelet feel indestructible. The precision tolerances and clasps are pure luxury horology quality.',
-      stars: 5,
-      product: 'Atlas Signet Ring'
-    }
-  ];
+  // Fresh Drops: flagged or top drops
+  const freshDrops = products.filter((p) => p.flags?.freshDrop || p.badge === 'New').length > 0
+    ? products.filter((p) => p.flags?.freshDrop || p.badge === 'New')
+    : products.slice(0, 8);
+
+  // Best Sellers: flagged or rating >= 4.8
+  const bestSellers = products.filter((p) => p.flags?.bestSeller || p.badge === 'Best Seller').length > 0
+    ? products.filter((p) => p.flags?.bestSeller || p.badge === 'Best Seller')
+    : products.filter((p) => p.rating >= 4.8).slice(0, 10);
+
+  const freshDropsRef = useRef<HTMLDivElement>(null);
+  const bestSellersRef = useRef<HTMLDivElement>(null);
+
+  const scrollTrack = (ref: React.RefObject<HTMLDivElement | null>, direction: 'left' | 'right') => {
+    if (!ref.current) return;
+    const container = ref.current;
+    const firstCard = (container.querySelector('[data-product-card]') as HTMLElement) || (container.firstElementChild as HTMLElement);
+    const gap = window.innerWidth >= 768 ? 10 : 8;
+    const cardWidth = firstCard ? firstCard.offsetWidth + gap : container.clientWidth * 0.8;
+    container.scrollBy({
+      left: direction === 'left' ? -cardWidth : cardWidth,
+      behavior: 'smooth'
+    });
+  };
 
   return (
-    <div className="space-y-0">
-      {/* 1. Hero Section */}
+    <div className="space-y-0 bg-white text-[#111111]">
+      {/* 4. HERO (Full viewport height video, no white gap) */}
       <HeroSection onNavigate={onNavigate} />
 
-      {/* 2. Brand Ticker */}
-      <Ticker />
+      {/* 5a. Category Circle Slider (mobile + desktop round 72px thumbnails with 11px uppercase labels) */}
+      <CategoryCircleSlider onNavigate={onNavigate} />
 
-      {/* 3. Best Sellers: Our Most Loved Designs */}
-      <section className="py-20 md:py-28 bg-[#f8f6f3]">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-            <div className="space-y-3">
-              <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-[#b9836a]">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Customer Favorites</span>
-              </div>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1c1c1a]">
-                Our Most Loved Hardware
-              </h2>
-              <p className="text-sm sm:text-base text-[#6d6a67] max-w-lg">
-                The iconic signatures defining the PASAAVA aesthetic. Engineered to be worn on repeat.
-              </p>
-            </div>
+      {/* 5b. FRESH DROPS */}
+      <section className="pt-4 sm:pt-6 pb-6 sm:pb-8 bg-white border-b border-[#E5E5E5] w-full overflow-hidden">
+        {/* Header Row */}
+        <div className="w-full max-w-[1680px] mx-auto px-4 sm:px-3 lg:px-4 flex items-center justify-center md:justify-between gap-4 mb-4 sm:mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold uppercase tracking-[0.05em] text-[#111111] text-center md:text-left">
+            FRESH DROPS
+          </h2>
 
-            <button
-              onClick={() => onNavigate('/men-category/men-bestsellers')}
-              className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#1c1c1a] hover:text-[#b9836a] transition-colors group self-start md:self-auto cursor-pointer"
-            >
-              <span>Explore Best Sellers</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
-
-          {/* Grid Layout with Highlight Card */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {bestSellers.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onQuickView={onQuickView}
-                onNavigate={(slug) => onNavigate(`/product/${slug}`)}
-              />
-            ))}
-          </div>
-
-          {/* Featured Editorial Banner Card */}
-          <div className="mt-12 bg-[#1c1c1a] text-white rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-xl">
-            <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-25 hidden md:block">
-              <img
-                src="/images/hero-masculine-atelier.jpg"
-                alt="PASAAVA Men's Icons"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="max-w-xl space-y-4 relative z-10">
-              <span className="text-xs uppercase tracking-widest text-[#b9836a] font-semibold">
-                The Icons of PASAAVA
-              </span>
-              <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-light leading-snug">
-                Engineered to catch the light. Crafted to endure every season.
-              </h3>
-              <p className="text-sm text-[#9a9da3] leading-relaxed">
-                Discover our signature men's pieces crafted from waterproof surgical steel, titanium, and 18K gold PVD with a 2-Year Craftsmanship Guarantee.
-              </p>
-              <div className="pt-2">
-                <button
-                  onClick={() => onNavigate('/shop')}
-                  className="inline-flex items-center gap-2 bg-white text-[#1c1c1a] px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-[#fafaf7] hover:scale-105 active:scale-95 transition-all shadow-md cursor-pointer"
-                >
-                  <span>Explore Full Collection</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Men's Flagship Hardware Categories */}
-      <GenderSplitSection onNavigate={onNavigate} />
-
-      {/* 5. New Arrivals: Latest Obsessions */}
-      <section className="py-20 md:py-28 bg-[#f8f6f3]">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-            <div className="space-y-3">
-              <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-[#b9836a]">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>New Season Drop</span>
-              </div>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1c1c1a]">
-                Our Latest Drops
-              </h2>
-              <p className="text-sm sm:text-base text-[#6d6a67] max-w-lg">
-                Fresh architectural silhouettes, chiseled signets, and dense spiral rope hardware just introduced into the studio.
-              </p>
-            </div>
-
+          {/* Desktop Discover More Button */}
+          <div className="hidden md:block">
             <button
               onClick={() => onNavigate('/men-category/men-newarrivals')}
-              className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#1c1c1a] hover:text-[#b9836a] transition-colors group self-start md:self-auto cursor-pointer"
+              className="border border-[#111111] bg-transparent text-[#111111] hover:bg-[#111111] hover:text-white px-5 py-2.5 text-xs font-semibold uppercase tracking-wider transition-colors duration-200 cursor-pointer rounded-none"
             >
-              <span>View All New Drops</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              Discover More
             </button>
           </div>
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {newArrivals.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onQuickView={onQuickView}
-                onNavigate={(slug) => onNavigate(`/product/${slug}`)}
-              />
-            ))}
-          </div>
+        {/* 2 in a single row, 2 below (Total 4 images in a 2x2 grid on mobile / 4-across on desktop) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-2 gap-y-6 sm:gap-x-4 sm:gap-y-8 px-2 sm:px-3 lg:px-4 w-full">
+          {freshDrops.slice(0, 4).map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              variant="bestseller"
+              onQuickView={onQuickView}
+              onNavigate={onNavigate}
+            />
+          ))}
+        </div>
+
+        {/* Mobile-Only Bottom Center Discover More Button */}
+        <div className="flex md:hidden justify-center mt-5 px-4">
+          <button
+            onClick={() => onNavigate('/men-category/men-newarrivals')}
+            className="border border-[#111111] bg-transparent text-[#111111] hover:bg-[#111111] hover:text-white px-7 py-2.5 text-xs font-semibold tracking-wider transition-colors duration-200 cursor-pointer"
+          >
+            Discover More
+          </button>
         </div>
       </section>
 
-      {/* 6. Brand Story & Craftsmanship */}
-      <BrandStorySection onNavigate={onNavigate} />
+      {/* 5c. Reels / Stories Carousel (5 vertical 9:16 cards, autoplay muted, product chips, centered arrows) */}
+      <ReelsStoriesCarousel onNavigate={onNavigate} />
 
-      {/* 7. Explore More Products: Dynamic Tabbed Showcase */}
-      <section className="py-20 md:py-28 bg-[#fafaf7] border-t border-[#e8e8e8]">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
-          <div className="text-center max-w-2xl mx-auto mb-10 space-y-3">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#b9836a]">
-              Curated Catalog
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1c1c1a]">
-              Discover Your Signature
+      {/* 5d. BEST SELLERS */}
+      <section className="pt-4 sm:pt-6 pb-8 sm:pb-12 bg-white border-b border-[#E5E5E5] w-full overflow-hidden">
+        {/* Header Row: Centered on mobile, left-aligned on desktop */}
+        <div className="w-full max-w-[1680px] mx-auto px-4 sm:px-3 lg:px-4 flex items-center justify-center md:justify-between gap-4 mb-4 sm:mb-6">
+          <div className="text-center md:text-left">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold uppercase tracking-[0.05em] text-[#111111]">
+              BEST SELLERS
             </h2>
-            <p className="text-sm sm:text-base text-[#6d6a67]">
-              Filter across categories and discover the hardware that defines your personal presence.
-            </p>
+          </div>
 
-            {/* Category Tabs */}
-            <div className="flex flex-wrap items-center justify-center gap-2 pt-4">
-              {(['All', 'Chains', 'Bracelets', 'Rings', 'Earrings'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-5 py-2 rounded-full text-xs font-semibold tracking-wide transition-all cursor-pointer ${
-                    activeTab === tab
-                      ? 'bg-[#1c1c1a] text-white shadow-sm'
-                      : 'bg-white border border-[#e0e0e0] text-[#6d6a67] hover:border-[#1c1c1a] hover:text-[#1c1c1a]'
-                  }`}
-                >
-                  {tab === 'All' ? 'Show All' : tab}
-                </button>
-              ))}
+          {/* Desktop Discover More + Slider Controls */}
+          <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={() => onNavigate('/men-category/men-bestsellers')}
+              className="border border-[#111111] bg-transparent text-[#111111] hover:bg-[#111111] hover:text-white px-5 py-2.5 text-xs font-semibold uppercase tracking-wider transition-colors duration-200 cursor-pointer rounded-none flex-shrink-0"
+            >
+              Discover More
+            </button>
+
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => scrollTrack(bestSellersRef, 'left')}
+                className="w-9 h-9 border border-[#E5E5E5] hover:border-[#111111] text-[#111111] flex items-center justify-center transition-colors cursor-pointer bg-white hover:bg-[#111111] hover:text-white shadow-xs"
+                aria-label="Previous best sellers"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollTrack(bestSellersRef, 'right')}
+                className="w-9 h-9 border border-[#E5E5E5] hover:border-[#111111] text-[#111111] flex items-center justify-center transition-colors cursor-pointer bg-white hover:bg-[#111111] hover:text-white shadow-xs"
+                aria-label="Next best sellers"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
+        </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {exploreProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onQuickView={onQuickView}
-                onNavigate={(slug) => onNavigate(`/product/${slug}`)}
-              />
-            ))}
-          </div>
+        {/* Full-Bleed Edge-to-Edge Best Sellers Row (Width 100vw, margin/padding 0) */}
+        <div
+          ref={bestSellersRef}
+          className="flex gap-[8px] md:gap-[10px] overflow-x-auto snap-x snap-mandatory no-scrollbar scrollbar-none scroll-smooth w-full px-0"
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
+          }}
+        >
+          {bestSellers.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              variant="bestseller"
+              onQuickView={onQuickView}
+              onNavigate={onNavigate}
+              className="flex-shrink-0 w-[calc((100vw-8px)/2)] md:w-[calc((100vw-20px)/3)] lg:w-[calc((100vw-40px)/5)] snap-start"
+            />
+          ))}
+        </div>
 
-          <div className="mt-14 text-center">
-            <button
-              onClick={() => onNavigate('/shop')}
-              className="inline-flex items-center gap-2.5 bg-[#1c1c1a] text-white px-8 py-4 rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-black hover:scale-105 active:scale-95 transition-all shadow-md cursor-pointer"
-            >
-              <span>Explore All 25 Men's Pieces</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+        {/* Mobile-Only Bottom Center Discover More Button */}
+        <div className="flex md:hidden justify-center mt-6 px-4">
+          <button
+            onClick={() => onNavigate('/men-category/men-bestsellers')}
+            className="border border-[#111111] bg-transparent text-[#111111] hover:bg-[#111111] hover:text-white px-7 py-2.5 text-xs font-semibold tracking-wider transition-colors duration-200 cursor-pointer"
+          >
+            Discover More
+          </button>
         </div>
       </section>
 
-      {/* 8. Editorial Press & Customer Quotes Slider */}
-      <section className="py-20 md:py-28 bg-[#16181c] text-white overflow-hidden">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
-          <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#b9836a]">
-              Verified Reviews
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal">
-              Tested by Modern Men
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((t, idx) => (
-              <div
-                key={idx}
-                className="bg-[#232529] p-8 rounded-3xl border border-[#2a2c30] flex flex-col justify-between space-y-6 relative group hover:border-[#b9836a]/50 transition-colors"
-              >
-                <div className="space-y-4">
-                  <div className="flex text-[#d4af37]">
-                    {[...Array(t.stars)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-current" />
-                    ))}
-                  </div>
-                  <p className="font-serif text-base sm:text-lg font-light italic leading-relaxed text-white/90">
-                    "{t.comment}"
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs">
-                  <div>
-                    <h4 className="font-semibold text-white">{t.author}</h4>
-                    <p className="text-[#9a9da3]">{t.role}</p>
-                  </div>
-                  <span className="text-[11px] text-[#b9836a] font-medium bg-[#b9836a]/10 px-2.5 py-1 rounded-full">
-                    {t.product}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 9. Customer Spotlight: Community Gallery */}
-      <CustomerSpotlightSection onNavigate={onNavigate} />
-
-      {/* 10. Frequently Asked Questions */}
-      <section className="py-20 md:py-28 bg-[#fafaf7] border-t border-[#e8e8e8]">
-        <div className="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#b9836a]">
-              Help & Clarity
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1c1c1a]">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-sm sm:text-base text-[#6d6a67]">
-              Everything you need to know about our men's sizing, waterproof materials, and 2-Year guarantee.
-            </p>
-          </div>
-
-          <Accordion
-            items={faqs.map((faq, idx) => ({
-              id: `faq-${idx}`,
-              title: faq.question,
-              content: <p className="leading-relaxed">{faq.answer}</p>,
-              defaultOpen: idx === 0
-            }))}
-            allowMultiple={false}
-          />
-        </div>
-      </section>
-
-      {/* 11. Newsletter Subscription */}
-      <NewsletterSection />
+      {/* Customer Reviews Carousel on Silver/Chrome Gradient (#E8E8E8→#BDBDBD) */}
+      <CustomerReviewsCarousel />
     </div>
   );
 };

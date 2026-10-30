@@ -1,10 +1,16 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ProductGrid } from '../components/ProductGrid';
-import { FilterBar } from '../components/FilterBar';
-import { products } from '../data/products';
-import { menCategories } from '../data/categories';
-import { Product } from '../types';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { CategoryCircleSlider } from '../components/CategoryCircleSlider';
+import { storageService } from '../services/storageService';
+import { seoService } from '../services/seoService';
+import { Product, CategoryItem } from '../types';
+import {
+  filterProductsByCategoryStrict,
+  isCategoryMatch,
+  normalizeCategorySlug
+} from '../utils/categoryUtils';
+
+export { filterProductsByCategoryStrict };
 
 interface CategoryPageProps {
   gender?: 'women' | 'men';
@@ -18,128 +24,78 @@ export const CategoryPage: React.FC<CategoryPageProps> = ({
   onQuickView,
   onNavigate
 }) => {
+  const [allProducts, setAllProducts] = useState<Product[]>(() => storageService.getProducts());
+  const [categories, setCategories] = useState<CategoryItem[]>(() => storageService.getCategories());
   const [selectedCategory, setSelectedCategory] = useState<string>(
-    subcategory || 'all'
+    subcategory || 'chains'
   );
-  const [sortBy, setSortBy] = useState('featured');
 
-  const categoryCards = menCategories;
-  const categories = ['Chains', 'Bracelets', 'Rings', 'Earrings'];
+  useEffect(() => {
+    return storageService.subscribe(() => {
+      setAllProducts(storageService.getProducts());
+      setCategories(storageService.getCategories());
+    });
+  }, []);
 
-  const filteredProducts = useMemo(() => {
-    let list = [...products];
-
-    // Filter by subcategory / tab
+  useEffect(() => {
     if (subcategory) {
-      if (subcategory.includes('bestseller')) {
-        list = list.filter((p) => p.badge === 'Best Seller');
-      } else if (subcategory.includes('newarrival')) {
-        list = list.filter((p) => p.badge === 'New' || p.badge === 'Trending');
-      } else if (subcategory.includes('onsale')) {
-        list = list.filter((p) => p.originalPrice !== undefined);
-      } else {
-        list = list.filter((p) =>
-          p.category.toLowerCase().includes(subcategory.toLowerCase())
-        );
-      }
-    } else if (selectedCategory !== 'all') {
-      list = list.filter((p) =>
-        p.category.toLowerCase().includes(selectedCategory.toLowerCase())
-      );
+      setSelectedCategory(subcategory);
     }
+  }, [subcategory]);
 
-    // Sort
-    switch (sortBy) {
-      case 'price-asc':
-        list.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-desc':
-        list.sort((a, b) => b.price - a.price);
-        break;
-      case 'rating':
-        list.sort((a, b) => b.rating - a.rating);
-        break;
-      case 'name':
-        list.sort((a, b) => a.title.localeCompare(b.title));
-        break;
-      default:
-        break;
-    }
+  // Dynamic Category SEO Meta & Breadcrumb JSON-LD
+  useEffect(() => {
+    const cleanCat = normalizeCategorySlug(selectedCategory || 'chains');
+    const catItem = categories.find((c) => isCategoryMatch(c.slug, selectedCategory));
+    const catName =
+      catItem?.name || cleanCat.charAt(0).toUpperCase() + cleanCat.slice(1);
 
-    return list;
-  }, [subcategory, selectedCategory, sortBy]);
+    const seoTitle = catItem?.seoTitle || `${catName} | Men's Jewellery | PASAAVA`;
+    const seoDesc =
+      catItem?.seoDesc ||
+      `Explore luxury men's ${catName.toLowerCase()} handcrafted from waterproof 316L surgical stainless steel at PASAAVA.`;
+    const ogImg = catItem?.image?.startsWith('http')
+      ? catItem.image
+      : `https://pasaava.growithcp.live${catItem?.image || '/images/cat-chains-prod.jpg'}`;
 
-  const getSubcategoryTitle = (sub?: string) => {
-    if (!sub) return "Men's Collection";
-    if (sub.includes('chain')) return "Neck Chains & Pendants";
-    if (sub.includes('bracelet')) return "Bracelets & Cuffs";
-    if (sub.includes('ring')) return "Rings & Signets";
-    if (sub.includes('earring')) return "Earrings & Studs";
-    if (sub.includes('bestseller')) return "Best Sellers";
-    if (sub.includes('newarrival')) return "New Releases";
-    if (sub.includes('onsale')) return "Archive & Sale";
-    return sub.toUpperCase();
+    seoService.applyMeta({
+      title: seoTitle,
+      description: seoDesc,
+      canonical: `https://pasaava.growithcp.live/#/category/${cleanCat}`,
+      ogTitle: seoTitle,
+      ogDescription: seoDesc,
+      ogImage: ogImg,
+      ogType: 'website',
+      jsonLd: seoService.buildBreadcrumbJsonLd([
+        { name: 'Home', url: '/#' },
+        { name: catName, url: `/#/category/${cleanCat}` }
+      ])
+    });
+  }, [selectedCategory, categories]);
+
+  const handleCategorySelect = (catId: string) => {
+    setSelectedCategory(catId);
+    window.history.replaceState(null, '', `#/category/${catId}`);
   };
 
-  const pageTitle = getSubcategoryTitle(subcategory);
-  const pageSubtitle = 'Architectural Cuban chains, beveled curb bracelets, and brushed signets engineered with surgical steel and 18K gold.';
+  const filteredProducts = useMemo(() => {
+    return filterProductsByCategoryStrict(allProducts, selectedCategory);
+  }, [allProducts, selectedCategory]);
 
   return (
-    <div className="py-10 sm:py-16 bg-[#f8f6f3]">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
-        {/* Page Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-[#b9836a]">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>PASAAVA MEN'S ATELIER</span>
-          </div>
-          <h1 className="font-serif text-3xl sm:text-5xl font-normal text-[#1c1c1a]">
-            {pageTitle}
-          </h1>
-          <p className="text-sm sm:text-base text-[#6d6a67] leading-relaxed">
-            {pageSubtitle}
-          </p>
-        </div>
+    <div className="pt-20 sm:pt-24 pb-16 bg-white text-[#111111] min-h-screen">
+      {/* Category Circle Slider (NECKPIECES, BRACELETS, EARRINGS, CHAINS, RINGS, PENDANTS) */}
+      <CategoryCircleSlider
+        activeCategoryId={selectedCategory}
+        onSelectCategory={handleCategorySelect}
+      />
 
-        {/* Subcategory Grid Cards (Only on main collection overview page) */}
-        {!subcategory && (
-          <div className="mb-14 grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {categoryCards.slice(1, 5).map((cat) => (
-              <div
-                key={cat.id}
-                onClick={() => onNavigate(cat.slug)}
-                className="group relative rounded-2xl overflow-hidden aspect-[4/3] bg-[#1c1c1a] shadow-xs cursor-pointer border border-[#e8e8e8]"
-              >
-                <img
-                  src={cat.image}
-                  alt={cat.name}
-                  className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 ease-out opacity-90 group-hover:opacity-100"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-3 left-3 right-3 text-white">
-                  <h4 className="text-sm font-semibold leading-tight">{cat.name}</h4>
-                  <p className="text-[11px] text-white/80">{cat.itemCount} pieces</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Filter Bar */}
-        <FilterBar
-          selectedCategory={selectedCategory}
-          onSelectCategory={(cat) => setSelectedCategory(cat)}
-          sortBy={sortBy}
-          onSortByChange={setSortBy}
-          categories={categories}
-          totalResults={filteredProducts.length}
-        />
-
-        {/* Product Grid */}
+      {/* Product Grid directly under category circles (without product description, matching img 1) */}
+      <div className="w-full max-w-[1680px] mx-auto px-2 sm:px-4 lg:px-6 pt-4 sm:pt-6">
         <ProductGrid
           products={filteredProducts}
           onQuickView={onQuickView}
-          onNavigate={(slug) => onNavigate(`/product/${slug}`)}
+          onNavigate={onNavigate}
           columns={4}
         />
       </div>

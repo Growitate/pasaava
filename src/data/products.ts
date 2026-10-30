@@ -2,11 +2,155 @@ import { Product } from '../types';
 
 export const products: Product[] = [
   {
+    id: 'drop-1',
+    slug: 'spikeball-pearl-chain',
+    title: 'SPIKEBALL PEARL CHAIN',
+    subtitle: 'Cultured Freshwater Pearls & Star Charm',
+    category: 'Chains',
+    gender: 'men',
+    price: 750,
+    originalPrice: 950,
+    rating: 5.0,
+    reviewCount: 34,
+    images: ['/images/drop-spikeball-pearl.jpg'],
+    tagline: 'Modern luxury statement combining organic luster with bold masculine star pendant.',
+    description: 'Crafted with hand-selected cultured freshwater pearls and anchored by a solid surgical steel 3D star charm. Designed to bridge timeless organic luster with razor-sharp streetwear architecture. Finished with an industrial lobster clasp for all-day security.',
+    materials: ['Grade AAA+ Cultured Freshwater Pearls', 'Solid 316L Surgical Stainless Steel Charm', 'High-Tensile Steel Wire Core'],
+    dimensions: 'Pearl Diameter: 6mm | Length: 19 Inch + 2 Inch Micro-Adjuster',
+    care: ['Wipe clean with soft polishing cloth', '100% Sweat and water resistant'],
+    whyItHits: [
+      'Hand-selected organic luster freshwater pearls',
+      'Sculpted 3D celestial star hardware',
+      'Pairs effortlessly with black tees and tailored shirts',
+      '100% Waterproof & Sweatproof',
+      'Anti-tarnish surgical steel clasp'
+    ],
+    matchWithSlugs: ['spikeball-pendant-chain', 'rogue-chain'],
+    seoTitle: "SPIKEBALL PEARL CHAIN | Chains | PASAAVA Men's Jewellery",
+    seoDesc: "Bold spikeball pearl chain for men. Combines lustrous pearls with a statement star pendant. Premium men’s jewellery from PASAAVA. Shop now.",
+    inStock: true
+  },
+  {
+    id: 'drop-2',
+    slug: 'spikeball-pendant-chain',
+    title: 'SPIKEBALL PENDANT CHAIN',
+    subtitle: 'Precision Box Link & 3D Star Pendant',
+    category: 'Pendants',
+    gender: 'men',
+    price: 600,
+    rating: 4.9,
+    reviewCount: 29,
+    images: ['/images/drop-spikeball-pendant.jpg'],
+    tagline: 'A sharp, iconic everyday staple engineered from high-grade surgical steel.',
+    description: 'A sharp everyday staple forged from solid 316L surgical steel. Features a diamond-cut box link chain suspending an angular 3D celestial star pendant with high-mirror polish finish. Light enough for effortless daily wear, distinctive enough to elevate any fit.',
+    materials: ['Solid 316L Surgical Stainless Steel', 'Vacuum PVD Coated', 'Hypoallergenic & Nickel-Free'],
+    dimensions: 'Pendant: 22mm x 18mm | Chain Length: 22 Inch (55 cm) Box Link',
+    care: ['100% waterproof safe for everyday workouts'],
+    whyItHits: [
+      'Angular 3D celestial star pendant',
+      'Precision diamond-cut box links',
+      'The perfect balance—not too minimal, not too bold',
+      '100% Waterproof & Gym-Proof',
+      'Zero fading, zero skin greening'
+    ],
+    matchWithSlugs: ['spikeball-pearl-chain', 'wave-chain'],
+    seoTitle: "SPIKEBALL PENDANT CHAIN | Chains | PASAAVA Men's Jewellery",
+    seoDesc: "Sleek spikeball star pendant chain for men. Precision-cut box links forged in waterproof 316L steel. Premium jewellery from PASAAVA. Shop now.",
+    inStock: true
+  },
+  {
+    id: 'drop-3',
+    slug: 'rogue-chain',
+    title: 'ROGUE CHAIN',
+    subtitle: 'Heavy Beaded Cuban Link Collar',
+    category: 'Chains',
+    gender: 'men',
+    price: 500,
+    rating: 4.9,
+    reviewCount: 42,
+    images: ['/images/drop-rogue-chain.jpg'],
+    tagline: 'Chunky textured Cuban links interlocking with precision beaded spheres.',
+    description: 'Engineered for confident presence, the Rogue Chain combines chunky bevel-cut Cuban links with precision-turned spherical beads. Heavyweight architecture that sits perfectly flat against the collarbone without rolling. Designed for bold solo wear or stacked streetwear layering.',
+    materials: ['High-Tensile 316L Surgical Steel', 'Hand-Polished Mirror Bevels', 'Anti-Tarnish Vacuum Bond'],
+    dimensions: 'Width: 8mm | Length: 20 Inch (50 cm) Heavy Collar',
+    care: ['Shower and workout safe', '100% Waterproof & Sweatproof'],
+    whyItHits: [
+      'Heavyweight textured Cuban & bead construction',
+      'Sits flush against the chest without twisting',
+      'Commanding presence for streetwear tailoring',
+      '100% Shower, Gym & Ocean safe',
+      'Anti-tarnish & Hypoallergenic'
+    ],
+    matchWithSlugs: ['wave-chain', 'bar-pendant'],
+    seoTitle: "ROGUE CHAIN | Chains | PASAAVA Men's Jewellery",
+    seoDesc: "Heavyweight Rogue beaded Cuban chain for men. Textured surgical steel links built for bold streetwear. Premium jewellery from PASAAVA. Shop now.",
+    inStock: true
+  },
+  {
+    id: 'drop-4',
+    slug: 'wave-chain',
+    title: 'WAVE CHAIN',
+    subtitle: 'Sculpted Organic Fluid Geometry',
+    category: 'Chains',
+    gender: 'men',
+    price: 799,
+    rating: 5.0,
+    reviewCount: 38,
+    images: ['/images/drop-wave-chain.jpg'],
+    tagline: 'The Wave Chain finds the balance between understated and bold.',
+    description: 'The Wave Chain finds the balance between understated and bold. Its flowing silhouette and sculpted bead details create a design that fits every style. Light enough for everyday wear, distinctive enough to elevate any outfit—it\'s the one chain you\'ll keep reaching for.',
+    materials: ['Stainless Steel'],
+    dimensions: '19 Inch + 2 Inch Extension',
+    care: [
+      '100% Waterproof, sweatproof, and heatproof safe for 24/7 wear',
+      'Wipe clean with a soft microfiber cloth'
+    ],
+    whyItHits: [
+      'A unique wave-inspired design',
+      'Pairs effortlessly with every outfit',
+      'The perfect balance—not too minimal, not too bold',
+      'Waterproof',
+      'Anti-tarnish'
+    ],
+    matchWithSlugs: ['rogue-chain', 'bar-pendant'],
+    seoTitle: "WAVE CHAIN | Chains | PASAAVA Men's Jewellery",
+    seoDesc: "Sculpted wave link chain for men in mirror-finish surgical steel. Organic fluid movement for modern icon style. PASAAVA luxury hardware. Shop now.",
+    inStock: true
+  },
+  {
+    id: 'drop-5',
+    slug: 'bar-pendant',
+    title: 'BAR PENDANT',
+    subtitle: 'Minimalist Architectural Cylinder Pendant',
+    category: 'Pendants',
+    gender: 'men',
+    price: 500,
+    rating: 4.8,
+    reviewCount: 51,
+    images: ['/images/drop-bar-pendant.jpg'],
+    tagline: 'Sleek monolithic column suspended on a fine diamond-cut link chain.',
+    description: 'A monolithic, clean-cut architectural cylinder pendant suspended on an ultra-fine diamond-cut link chain. Delivering understated authority with quiet confidence, the Bar Pendant is engineered from solid surgical steel to withstand ocean water, gym sweat, and daily showers without fading.',
+    materials: ['Solid 316L Surgical Stainless Steel', 'Anti-Tarnish Vacuum Bond', 'Sweat & Heat Resistant'],
+    dimensions: 'Pendant: 35mm x 5mm | Chain: 22 Inch (55 cm) Diamond-Cut Chain',
+    care: ['Safe for 24/7 continuous wear', '100% Waterproof & Sweatproof'],
+    whyItHits: [
+      'Minimalist monolithic architectural column',
+      'Ultra-durable solid surgical steel',
+      'Pairs effortlessly with every outfit',
+      '100% Waterproof & Sweatproof',
+      'Anti-tarnish vacuum bond'
+    ],
+    matchWithSlugs: ['spikeball-pendant-chain', 'wave-chain'],
+    seoTitle: "BAR PENDANT | Chains | PASAAVA Men's Jewellery",
+    seoDesc: "Minimalist cylindrical bar pendant necklace for men. Anti-tarnish waterproof stainless steel on fine chain. PASAAVA men’s jewellery. Shop now.",
+    inStock: true
+  },
+  {
     id: 'prod-1',
     slug: 'aurora-bar-necklace',
     title: 'Vanguard Linear Bar Pendant',
     subtitle: 'Architectural Beveled Column',
-    category: 'Chains',
+    category: 'Pendants',
     gender: 'men',
     price: 85,
     originalPrice: 105,
@@ -28,6 +172,8 @@ export const products: Product[] = [
       text: 'The weight and polish are exceptional. Hangs perfectly on the chest and has not tarnished after 8 months.',
       author: 'Marcus Vance'
     },
+    seoTitle: "Vanguard Bar Pendant | Chains | PASAAVA Men's Jewellery",
+    seoDesc: "Vanguard architectural bar pendant necklace for men. Engineered in 18K gold PVD and 316L surgical steel. PASAAVA premium jewellery. Shop now.",
     inStock: true,
     colors: [
       { name: 'Polished Silver', hex: '#e0e0e0' },
@@ -56,11 +202,20 @@ export const products: Product[] = [
     materials: ['Grade AAA+ Brilliant Carbonite Stones', 'Solid 316L Stainless Steel / Rhodium Plated', 'Double-latch compression safety lock'],
     dimensions: 'Stone Width: 4mm | Length: 7.8 inches (20 cm) / 8.5 inches (21.5 cm)',
     care: ['Rinse with warm water after workouts', 'Safe for 24/7 continuous wear'],
+    whyItHits: [
+      'Bezel-reinforced brilliant crystals that never fall out',
+      'Sits perfectly flush next to luxury timepieces',
+      'The perfect balance—not too minimal, not too bold',
+      'Double-latch compression safety lock',
+      '100% Waterproof, sweatproof & anti-tarnish'
+    ],
     matchWithSlugs: ['titan-brushed-ring', 'atlas-cuban-chain', 'titan-figaro-chain'],
     reviewQuote: {
       text: 'Catches the light with razor sharpness without looking gaudy. Pairs seamlessly next to my diver watch.',
       author: 'Julian Reed'
     },
+    seoTitle: "Viper Tennis Bracelet | Bracelets | PASAAVA Jewellery",
+    seoDesc: "Viper diamond-cut tennis wristwear for men. Features ultra-refractive cubic zirconia in waterproof steel. PASAAVA luxury jewellery. Shop now.",
     inStock: true,
     colors: [
       { name: 'Silver Steel', hex: '#d9d9d9' },
@@ -94,6 +249,8 @@ export const products: Product[] = [
       text: 'The weight and polish are incredible. I wear it daily in the gym and shower without any discoloration.',
       author: 'Marcus Vance'
     },
+    seoTitle: "Atlas Cuban Chain | Neck Chains | PASAAVA Men's Jewellery",
+    seoDesc: "Commanding Atlas Cuban link chain for men. Crafted from solid 316L steel with mirror-polished beveled edges. Premium PASAAVA jewellery. Shop now.",
     inStock: true,
     colors: [
       { name: 'Polished Silver', hex: '#c0c0c0' },
@@ -126,6 +283,8 @@ export const products: Product[] = [
       text: 'Super comfortable fit and the clasp mechanism is rock solid. Definitely my favorite everyday piece.',
       author: 'David Wright'
     },
+    seoTitle: "Atlas Curb Bracelet | Bracelets | PASAAVA Men's Jewellery",
+    seoDesc: "Substantial Atlas curb chain bracelet for men. Cast in heavy 316L surgical steel with secure custom clasp. PASAAVA luxury wristwear. Shop now.",
     inStock: true,
     colors: [
       { name: 'Silver', hex: '#d0d0d0' },
@@ -138,7 +297,7 @@ export const products: Product[] = [
     slug: 'elara-crystal-necklace',
     title: 'Apex Solitaire Pendant Chain',
     subtitle: 'Bezel-Framed Geometric Mineral Stone',
-    category: 'Chains',
+    category: 'Pendants',
     gender: 'men',
     price: 70,
     originalPrice: 90,
@@ -160,6 +319,8 @@ export const products: Product[] = [
       text: 'Striking without being over the top. Looks awesome over black tees.',
       author: 'Ethan Parker'
     },
+    seoTitle: "Apex Solitaire Pendant | Chains | PASAAVA Men's Jewellery",
+    seoDesc: "Apex solitaire crystal pendant necklace for men. Precision-cut stone bezel set in waterproof surgical steel. Luxury PASAAVA jewellery. Shop now.",
     inStock: true,
     colors: [
       { name: 'Silver Steel', hex: '#d6d6d6' },
@@ -192,6 +353,8 @@ export const products: Product[] = [
       text: 'Great shine and texture. Doesn’t pull arm hairs and fits smoothly with my chronograph.',
       author: 'Liam Evans'
     },
+    seoTitle: "Knox Rope Bracelet | Bracelets | PASAAVA Men's Jewellery",
+    seoDesc: "Knox nautical twisted rope bracelet for men. Diamond-cut interlocking links in waterproof stainless steel. PASAAVA men’s jewellery. Shop now.",
     inStock: true,
     colors: [
       { name: 'Silver', hex: '#cccccc' },
@@ -225,6 +388,8 @@ export const products: Product[] = [
       text: 'The twisted silhouette looks rugged and masculine. Fits comfortably on my index finger.',
       author: 'Cole Reynolds'
     },
+    seoTitle: "Vector Sculpted Band | Rings | PASAAVA Men's Jewellery",
+    seoDesc: "Vector twisted sculptural statement band ring for men. Hypoallergenic solid steel contour with satin finish. PASAAVA luxury hardware. Shop now.",
     inStock: true,
     colors: [
       { name: 'Gold', hex: '#d4af37' },
@@ -257,6 +422,8 @@ export const products: Product[] = [
       text: 'Super comfortable to sleep in and never irritates my sensitive piercings. Best men\'s studs on the market.',
       author: 'Alexander Cole'
     },
+    seoTitle: "Ryder Black Studs | Earrings | PASAAVA Men's Jewellery",
+    seoDesc: "Minimalist Ryder matte black onyx stud earrings for men. Built from hypoallergenic surgical steel for daily wear. PASAAVA men's jewellery. Shop now.",
     inStock: true,
     colors: [
       { name: 'Matte Black', hex: '#111111' },
@@ -290,6 +457,8 @@ export const products: Product[] = [
       text: 'The 4mm width is the sweet spot. Looks thick and solid without being too flashy.',
       author: 'Travis Hayes'
     },
+    seoTitle: "Knox Spiral Rope Chain | Neck Chains | PASAAVA Jewellery",
+    seoDesc: "Heavyweight Knox diamond-cut spiral rope chain for men. Rich textured links forged in waterproof 316L steel. Luxury PASAAVA jewellery. Shop now.",
     inStock: true,
     colors: [
       { name: '18K Gold', hex: '#d4af37' },
@@ -322,6 +491,8 @@ export const products: Product[] = [
       text: 'I can shift this ring between my index and thumb easily. Solid weight and clean lines.',
       author: 'Mason Ward'
     },
+    seoTitle: "Nexus Open Band Ring | Rings | PASAAVA Men's Jewellery",
+    seoDesc: "Architectural Nexus dual-finial open band ring for men. Precision-engineered in waterproof surgical steel. PASAAVA designer jewellery. Shop now.",
     inStock: true,
     colors: [
       { name: 'Gold', hex: '#d4af37' },
@@ -355,6 +526,8 @@ export const products: Product[] = [
       text: 'The carabiner closure is badass. Heavy, substantial, and definitely turns heads.',
       author: 'Lucas Vance'
     },
+    seoTitle: "Monolith Link Bracelet | Bracelets | PASAAVA Jewellery",
+    seoDesc: "Monolith carabiner chain bracelet for men. Heavy industrial marine hardware cast in 316L stainless steel. Luxury PASAAVA men's wristwear. Shop now.",
     inStock: true,
     colors: [
       { name: '18K Gold PVD', hex: '#d4af37' },
@@ -388,6 +561,8 @@ export const products: Product[] = [
       text: 'Timeless styling. Looks amazing paired with an open collar shirt or crew neck sweater.',
       author: 'Ethan Parker'
     },
+    seoTitle: "Titan Figaro Chain | Neck Chains | PASAAVA Men's Jewellery",
+    seoDesc: "Classic Titan 3+1 Figaro chain for men. Italian inspired high-polish rhythm forged in waterproof surgical steel. PASAAVA luxury chains. Shop now.",
     inStock: true,
     colors: [
       { name: 'Silver Steel', hex: '#bfbfbf' },
@@ -420,6 +595,8 @@ export const products: Product[] = [
       text: 'The cross detail is subtle yet stylish. Lightweight enough for everyday wear and the clasp is super tight.',
       author: 'Zack Thorne'
     },
+    seoTitle: "Ryder Cross Hoops | Earrings | PASAAVA Men's Jewellery",
+    seoDesc: "Versatile Ryder cross pendant huggie hoop earrings for men. Detachable charm in hypoallergenic surgical steel. PASAAVA men’s jewellery. Shop now.",
     inStock: true,
     colors: [
       { name: 'Silver', hex: '#cccccc' },
@@ -454,6 +631,8 @@ export const products: Product[] = [
       text: 'A clean, handsome ring with just the right amount of presence without being gaudy.',
       author: 'Noah Bennett'
     },
+    seoTitle: "Atlas Signet Ring | Rings | PASAAVA Men's Jewellery",
+    seoDesc: "Bold Atlas cushion face signet ring for men. Substantial solid 316L steel with clean brushed geometric top. PASAAVA luxury hardware. Shop now.",
     inStock: true,
     colors: [
       { name: 'Polished Silver', hex: '#c8c8c8' },
@@ -486,6 +665,8 @@ export const products: Product[] = [
       text: 'Feels like high-end watch craftsmanship on the wrist. Solid, heavy, and very masculine.',
       author: 'Alexander Cole'
     },
+    seoTitle: "Titan Link Bracelet | Bracelets | PASAAVA Men's Jewellery",
+    seoDesc: "Titan architectural block link bracelet for men. Precision faceted links in sweatproof 316L stainless steel. PASAAVA luxury wristwear. Shop now.",
     inStock: true,
     colors: [
       { name: 'Brushed Silver', hex: '#cccccc' },
@@ -518,6 +699,8 @@ export const products: Product[] = [
       text: 'The contrast between the brushed center and mirror edges looks incredible.',
       author: 'Daniel Craig'
     },
+    seoTitle: "Titan Brushed Ring | Rings | PASAAVA Men's Jewellery",
+    seoDesc: "Substantial Titan beveled industrial band ring for men. Dual-tone brushed center in waterproof surgical steel. PASAAVA men’s jewellery. Shop now.",
     inStock: true,
     colors: [
       { name: 'Gunmetal Silver', hex: '#b0b0b0' },
@@ -551,6 +734,8 @@ export const products: Product[] = [
       text: 'Rich leather scent, soft on the wrist and the magnetic lock is snappy and secure.',
       author: 'James Wilson'
     },
+    seoTitle: "Orion Leather Bracelet | Bracelets | PASAAVA Jewellery",
+    seoDesc: "Orion braided Italian calfskin leather bracelet for men. Finished with a magnetic surgical steel clasp. Premium PASAAVA men's wristwear. Shop now.",
     inStock: true,
     colors: [
       { name: 'Onyx Black', hex: '#111111' },
@@ -583,6 +768,8 @@ export const products: Product[] = [
       text: 'Simple, sharp, and very clean look. Exactly what I was searching for.',
       author: 'Julian Reed'
     },
+    seoTitle: "Orion Box Chain | Neck Chains | PASAAVA Men's Jewellery",
+    seoDesc: "Orion geometric squared box link chain for men. Clean architectural symmetry in waterproof 316L surgical steel. PASAAVA luxury chains. Shop now.",
     inStock: true,
     colors: [
       { name: 'Polished Silver', hex: '#d0d0d0' },
@@ -616,6 +803,8 @@ export const products: Product[] = [
       text: 'The movement of the spike is subtle and the click closure is solid. Definitely my favorite earring.',
       author: 'Dominic Cross'
     },
+    seoTitle: "Apex Spike Huggie | Earrings | PASAAVA Men's Jewellery",
+    seoDesc: "Apex kinetic geometric spike huggie earring for men. Edgy drop silhouette in hypoallergenic 316L surgical steel. PASAAVA men’s jewellery. Shop now.",
     inStock: true,
     colors: [
       { name: 'Silver Steel', hex: '#e2e2e2' },
@@ -648,6 +837,8 @@ export const products: Product[] = [
       text: 'Clean, thick, and doesn’t look flimsy like normal hoops. Snaps shut tightly.',
       author: 'Leo Sterling'
     },
+    seoTitle: "Chronos Huggie Hoops | Earrings | PASAAVA Men's Jewellery",
+    seoDesc: "Heavyweight Chronos beveled huggie hoop earrings for men. Snug clicker fit in hypoallergenic surgical steel. PASAAVA luxury ear jewellery. Shop now.",
     inStock: true,
     colors: [
       { name: 'Silver Steel', hex: '#d6d6d6' },
@@ -681,6 +872,8 @@ export const products: Product[] = [
       text: 'The flush channel setting is brilliant. Doesn\'t catch on pockets or weight gym grips.',
       author: 'Brandon Ross'
     },
+    seoTitle: "Vanguard Eternity Band | Rings | PASAAVA Men's Jewellery",
+    seoDesc: "Vanguard channel-set black carbonite eternity band ring for men. Stealth modern luxury in waterproof surgical steel. PASAAVA men's rings. Shop now.",
     inStock: true,
     colors: [
       { name: 'Silver Steel', hex: '#e4e4e4' },
@@ -713,6 +906,8 @@ export const products: Product[] = [
       text: 'The starburst compass engraving has great depth and texture. Fits great on the pinky or ring finger.',
       author: 'Nico Vance'
     },
+    seoTitle: "Centurion Signet Ring | Rings | PASAAVA Men's Jewellery",
+    seoDesc: "Centurion starburst compass signet ring for men. Chiseled face motif cast in durable 316L surgical steel. Luxury PASAAVA men's jewellery. Shop now.",
     inStock: true,
     colors: [
       { name: 'Silver', hex: '#d8d8d8' },
@@ -724,7 +919,7 @@ export const products: Product[] = [
     slug: 'luna-pearl-pendant',
     title: 'Komorebi Baroque Pearl Talisman',
     subtitle: 'Organic Baroque Pearl on Heavy Curb Chain',
-    category: 'Chains',
+    category: 'Pendants',
     gender: 'men',
     price: 79,
     originalPrice: 98,
@@ -746,6 +941,8 @@ export const products: Product[] = [
       text: 'Pearls for men done right. The heavy chain balances the pearl so well. Gets tons of compliments.',
       author: 'Elijah Stone'
     },
+    seoTitle: "Komorebi Pearl Talisman | Chains | PASAAVA Jewellery",
+    seoDesc: "Komorebi natural baroque pearl pendant on heavy curb chain. Organic ocean luster meets masculine steel hardware. PASAAVA men's jewellery. Shop now.",
     inStock: true,
     colors: [
       { name: 'Organic Pearl / Silver', hex: '#e8e8e8' },
@@ -757,7 +954,7 @@ export const products: Product[] = [
     slug: 'nova-heart-necklace',
     title: 'Ares Shield Dog Tag Chain',
     subtitle: 'Beveled Military Shield Silhouette',
-    category: 'Chains',
+    category: 'Pendants',
     gender: 'men',
     price: 64,
     badge: 'Trending',
@@ -778,6 +975,8 @@ export const products: Product[] = [
       text: 'Clean geometry and solid weight. Layers perfectly with my Cuban chain.',
       author: 'Marcus Vance'
     },
+    seoTitle: "Ares Shield Tag Chain | Chains | PASAAVA Men's Jewellery",
+    seoDesc: "Ares beveled military shield dog tag chain for men. Industrial tactical finish in waterproof 316L surgical steel. PASAAVA luxury chains. Shop now.",
     inStock: true,
     colors: [
       { name: 'Polished Silver', hex: '#d4d4d4' },
@@ -810,6 +1009,8 @@ export const products: Product[] = [
       text: 'Lays completely flat like a ribbon of pure liquid metal. Super sleek under an open collar shirt.',
       author: 'Liam Vance'
     },
+    seoTitle: "Siena Snake Chain | Neck Chains | PASAAVA Men's Jewellery",
+    seoDesc: "Liquid Siena flat herringbone snake chain for men. Contours the collarbone in high-luster waterproof surgical steel. PASAAVA luxury chains. Shop now.",
     inStock: true,
     colors: [
       { name: 'Stainless Silver', hex: '#dcdcdc' },
@@ -819,15 +1020,27 @@ export const products: Product[] = [
 ];
 
 export const getProductBySlug = (slug: string): Product | undefined => {
-  return products.find(p => p.slug === slug);
+  if (!slug) return undefined;
+  const cleanSlug = slug
+    .trim()
+    .replace(/^(\/)?(product|products|p)\/+/i, '')
+    .replace(/^(\/)?(product|products|p)\/+/i, '')
+    .replace(/^\/+|\/+$/g, '')
+    .toLowerCase();
+
+  return products.find(
+    (p) =>
+      p.slug.toLowerCase() === cleanSlug ||
+      p.id.toLowerCase() === cleanSlug
+  );
 };
 
 export const getFeaturedProducts = (): Product[] => {
-  return products.filter(p => p.badge === 'Best Seller').slice(0, 4);
+  return products.filter(p => p.badge === 'Best Seller').slice(0, 8);
 };
 
 export const getNewArrivals = (): Product[] => {
-  return products.filter(p => p.badge === 'New' || p.badge === 'Trending').slice(0, 4);
+  return products.filter(p => p.badge === 'New' || p.badge === 'Trending' || p.badge === 'Popular').slice(0, 8);
 };
 
 export const getProductsByGender = (gender: 'women' | 'men' | 'all' = 'all'): Product[] => {
@@ -836,5 +1049,25 @@ export const getProductsByGender = (gender: 'women' | 'men' | 'all' = 'all'): Pr
 
 export const getProductsByCategory = (category: string): Product[] => {
   if (!category || category.toLowerCase() === 'all') return products;
-  return products.filter(p => p.category.toLowerCase().includes(category.toLowerCase()));
+  const target = category.toLowerCase().trim();
+  if (target === 'rings' || target === 'ring') {
+    return products.filter(p => p.category === 'Rings');
+  }
+  if (target === 'earrings' || target === 'earring') {
+    return products.filter(p => p.category === 'Earrings');
+  }
+  if (target === 'chains' || target === 'chain') {
+    return products.filter(p => p.category === 'Chains');
+  }
+  if (target.includes('neck') || target === 'neck-chains') {
+    return products.filter(p => p.category === 'Neck Chains');
+  }
+  if (target.includes('bracelet')) {
+    return products.filter(p => p.category === 'Bracelets');
+  }
+  if (target.includes('pendant')) {
+    return products.filter(p => p.category === 'Pendants' || /\b(pendant|pendants|talisman|dog tag)\b/i.test(p.title));
+  }
+  return products.filter(p => p.category.toLowerCase() === target);
 };
+

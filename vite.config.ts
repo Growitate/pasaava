@@ -7,6 +7,11 @@ export default defineConfig({
   server: {
     host: true,
     port: 6790,
-    allowedHosts: ['pasaava.cyberpunk.co.in', '.cyberpunk.co.in', 'localhost', '127.0.0.1']
+    allowedHosts: ['pasaava.growithcp.live', '.growithcp.live', 'pasaava.cyberpunk.co.in', '.cyberpunk.co.in', 'localhost', '127.0.0.1']
+  },
+  preview: {
+    host: true,
+    port: 6790,
+    allowedHosts: ['pasaava.growithcp.live', '.growithcp.live', 'pasaava.cyberpunk.co.in', '.cyberpunk.co.in', 'localhost', '127.0.0.1']
   }
 });

@@ -22,18 +22,15 @@ export const FavouritePage: React.FC<FavouritePageProps> = ({
   };
 
   return (
-    <div className="py-12 sm:py-20 bg-[#f8f6f3]">
+    <div className="pt-24 pb-12 sm:py-20 bg-white text-[#111111]">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12 pb-6 border-b border-[#e8e8e8]">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12 pb-6 border-b border-[#E5E5E5]">
           <div className="space-y-2">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#b9836a]">
-              Saved Pieces
-            </span>
-            <h1 className="font-serif text-3xl sm:text-5xl font-normal text-[#1c1c1a]">
+            <h1 className="font-serif text-3xl sm:text-5xl font-normal text-[#111111]">
               Your Favourites
             </h1>
-            <p className="text-sm text-[#6d6a67]">
+            <p className="text-sm text-[#6B6B6B]">
               {wishlist.length} item{wishlist.length === 1 ? '' : 's'} saved to your personal wishlist.
             </p>
           </div>
@@ -42,7 +39,7 @@ export const FavouritePage: React.FC<FavouritePageProps> = ({
             <div className="flex items-center gap-3">
               <button
                 onClick={clearWishlist}
-                className="flex items-center gap-1.5 text-xs text-[#9a948e] hover:text-[#e04545] transition-colors px-3 py-2"
+                className="flex items-center gap-1.5 text-xs text-[#6B6B6B] hover:text-[#e04545] transition-colors px-3 py-2 cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Clear All</span>
@@ -50,7 +47,7 @@ export const FavouritePage: React.FC<FavouritePageProps> = ({
 
               <button
                 onClick={handleAddAllToCart}
-                className="flex items-center gap-2 bg-[#1c1c1a] text-white px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-black transition-all shadow-sm"
+                className="flex items-center gap-2 bg-[#111111] text-white px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-[#333333] transition-all shadow-sm cursor-pointer"
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
                 <span>Move All to Bag</span>
@@ -62,19 +59,19 @@ export const FavouritePage: React.FC<FavouritePageProps> = ({
         {/* Content */}
         {wishlist.length === 0 ? (
           <div className="py-20 text-center max-w-md mx-auto space-y-4">
-            <div className="w-16 h-16 rounded-full bg-white border border-[#e8e8e8] flex items-center justify-center mx-auto text-[#9a948e] shadow-sm">
+            <div className="w-16 h-16 rounded-full bg-[#F5F5F5] border border-[#E5E5E5] flex items-center justify-center mx-auto text-[#6B6B6B] shadow-sm">
               <Heart className="w-8 h-8" />
             </div>
-            <h3 className="font-serif text-2xl font-light text-[#1c1c1a]">
+            <h3 className="font-serif text-2xl font-light text-[#111111]">
               No favourites saved yet
             </h3>
-            <p className="text-sm text-[#6d6a67]">
+            <p className="text-sm text-[#6B6B6B]">
               Click the heart icon on any jewelry piece across our collection to save it for later.
             </p>
             <div className="pt-2">
               <button
                 onClick={() => onNavigate('/shop')}
-                className="inline-flex items-center gap-2 bg-[#1c1c1a] text-white px-7 py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-black transition-all shadow-md"
+                className="inline-flex items-center gap-2 bg-[#111111] text-white px-7 py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-[#333333] transition-all shadow-md cursor-pointer"
               >
                 <span>Explore Catalog</span>
                 <ArrowRight className="w-4 h-4" />
@@ -88,7 +85,7 @@ export const FavouritePage: React.FC<FavouritePageProps> = ({
                 key={product.id}
                 product={product}
                 onQuickView={onQuickView}
-                onNavigate={(slug) => onNavigate(`/product/${slug}`)}
+                onNavigate={onNavigate}
               />
             ))}
           </div>

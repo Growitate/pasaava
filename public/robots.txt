@@ -1,0 +1,11 @@
+# robots.txt for PASAAVA Men's Jewellery
+User-agent: *
+Disallow: /admin
+Disallow: /admin/
+Disallow: /#/admin
+Disallow: /#/admin/
+Disallow: /review/
+Disallow: /#/review/
+Allow: /
+
+Sitemap: https://pasaava.growithcp.live/sitemap.xml

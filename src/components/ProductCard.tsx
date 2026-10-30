@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Eye, ShoppingBag, Check } from 'lucide-react';
+import { Heart, Eye, ShoppingBag, Plus, Check } from 'lucide-react';
 import { Product } from '../types';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -8,14 +8,18 @@ import { useCurrency } from '../context/CurrencyContext';
 
 interface ProductCardProps {
   product: Product;
+  variant?: 'default' | 'bestseller';
   onQuickView?: (product: Product) => void;
   onNavigate?: (slug: string) => void;
+  className?: string;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
+  variant = 'default',
   onQuickView,
-  onNavigate
+  onNavigate,
+  className = ''
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
@@ -24,8 +28,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const { formatPrice } = useCurrency();
 
   const isFav = isInWishlist(product.id);
-  const primaryImg = product.images[0];
-  const hoverImg = product.images[1] || primaryImg;
+  const primaryImg = product.images[0] || '/images/cat-all-prod.jpg';
+  const hoverImg = product.images.find((img) => img !== primaryImg) || primaryImg;
+  const isSoldOut = !product.inStock || product.badge === 'Sold Out';
+  const hasSale = Boolean(product.originalPrice && product.originalPrice > product.price);
+  const finish = (product.materials && product.materials[0]) || '316L Surgical Steel';
+  const imageAlt = `${product.title} - ${finish} men's jewellery`;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -40,147 +48,117 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   const handleCardClick = () => {
+    const targetPath = `/product/${product.slug}`;
     if (onNavigate) {
-      onNavigate(product.slug);
+      onNavigate(targetPath);
     } else {
-      window.location.hash = `#/product/${product.slug}`;
+      window.location.hash = `#${targetPath}`;
     }
   };
 
+  if (variant === 'bestseller') {
+    return (
+      <div
+        data-product-card
+        className={`group relative flex flex-col cursor-pointer bg-transparent select-none ${className}`}
+        onClick={handleCardClick}
+      >
+        {/* Card Image: 4/5 aspect ratio */}
+        <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#F5F5F5]">
+
+          {/* Product Image */}
+          <img
+            src={primaryImg}
+            alt={imageAlt}
+            loading="lazy"
+            className="w-full h-full object-cover object-center block transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+          />
+
+          {/* Circular "+" Quick-Add Button */}
+          {!isSoldOut && (
+            <button
+              onClick={handleAddToCart}
+              aria-label="Quick add to bag"
+              className="absolute bottom-2.5 right-2.5 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/85 hover:bg-white text-[#111111] shadow-md backdrop-blur-xs border border-black/10 flex items-center justify-center active:scale-90 transition-transform cursor-pointer"
+            >
+              {isAdded ? (
+                <Check className="w-4 h-4 text-[#22c55e]" />
+              ) : (
+                <Plus className="w-4 h-4 text-[#111111]" />
+              )}
+            </button>
+          )}
+        </div>
+
+        {/* Card Text */}
+        <div className="mt-2.5 sm:mt-3 text-left px-0 space-y-1">
+          <h3 className="text-[13px] sm:text-[14px] font-bold text-[#111111] uppercase tracking-[0.02em] truncate group-hover:underline">
+            {product.title}
+          </h3>
+          <div className="flex items-center gap-2 text-[13px] sm:text-[14px] font-normal text-[#111111] leading-none">
+            <span>Rs. {product.price.toFixed(2)}</span>
+            {hasSale && product.originalPrice && (
+              <span className="line-through text-[11px] sm:text-[12px] text-[#999999]">
+                Rs. {product.originalPrice.toFixed(2)}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <motion.div
-      className="group relative flex flex-col cursor-pointer bg-transparent"
+    <div
+      data-product-card
+      className={`group relative flex flex-col cursor-pointer bg-transparent select-none ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleCardClick}
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
     >
-      {/* Image Container */}
-      <div className="relative aspect-square w-full overflow-hidden rounded-[16px] bg-[#f2efe9] border border-[#e8e8e8]/70">
-        {/* Badge */}
-        {product.badge && (
-          <div className="absolute top-3 left-3 z-10">
-            <span
-              className={`inline-flex items-center px-2.5 py-1 text-[11px] font-medium tracking-wide uppercase rounded-full backdrop-blur-md shadow-sm ${
-                product.badge === 'Best Seller'
-                  ? 'bg-[#1c1c1a] text-white'
-                  : product.badge === 'Sale'
-                  ? 'bg-[#b9836a] text-white'
-                  : 'bg-white/90 text-[#1c1c1a]'
-              }`}
-            >
-              {product.badge}
-            </span>
-          </div>
-        )}
+      {/* Product Image Tile: 4/5 aspect ratio matching reference */}
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#F5F5F5]">
 
-        {/* Wishlist Button */}
-        <button
-          onClick={handleToggleFav}
-          aria-label={isFav ? 'Remove from wishlist' : 'Add to wishlist'}
-          className="absolute top-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 backdrop-blur-md text-[#1c1c1a] shadow-sm transition-all duration-200 hover:bg-white hover:scale-110 active:scale-95"
-        >
-          <Heart
-            className={`h-4 w-4 transition-colors ${
-              isFav ? 'fill-[#e04545] text-[#e04545]' : 'text-[#1c1c1a]'
-            }`}
-          />
-        </button>
-
-        {/* Primary and Hover Images */}
+        {/* Product Image */}
         <img
           src={primaryImg}
-          alt={product.title}
+          alt={imageAlt}
           loading="lazy"
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-out ${
-            isHovered && hoverImg ? 'opacity-0' : 'opacity-100'
-          }`}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
         />
-        {hoverImg && (
-          <img
-            src={hoverImg}
-            alt={`${product.title} alternate view`}
-            loading="lazy"
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-out ${
-              isHovered ? 'opacity-100 scale-105' : 'opacity-0 scale-100'
-            }`}
-            style={{ transition: 'opacity 0.5s ease-out, transform 0.7s ease-out' }}
-          />
-        )}
 
-        {/* Quick Actions overlay on hover */}
-        <div
-          className={`absolute inset-x-3 bottom-3 z-10 flex gap-2 transition-all duration-300 ${
-            isHovered
-              ? 'opacity-100 translate-y-0'
-              : 'opacity-0 translate-y-3 pointer-events-none'
-          }`}
-        >
-          {onQuickView && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onQuickView(product);
-              }}
-              className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-full bg-white/95 backdrop-blur-md text-[#1c1c1a] text-[13px] font-medium shadow-md transition-transform duration-150 hover:bg-white hover:scale-[1.02] active:scale-95"
-            >
-              <Eye className="h-3.5 w-3.5" />
-              <span>Quick View</span>
-            </button>
-          )}
-
+        {/* Circular "+" Quick-Add Button */}
+        {!isSoldOut && (
           <button
             onClick={handleAddToCart}
-            className={`flex items-center justify-center gap-1.5 h-10 px-4 rounded-full text-[13px] font-medium shadow-md transition-all duration-150 ${
-              isAdded
-                ? 'bg-[#22c55e] text-white scale-[1.02]'
-                : 'bg-[#1c1c1a] text-white hover:bg-black hover:scale-[1.02] active:scale-95'
-            } ${!onQuickView ? 'w-full' : ''}`}
+            aria-label="Quick add to bag"
+            className="absolute bottom-2.5 right-2.5 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/85 hover:bg-white text-[#111111] shadow-md backdrop-blur-xs border border-black/10 flex items-center justify-center active:scale-90 transition-transform cursor-pointer"
           >
             {isAdded ? (
-              <>
-                <Check className="h-3.5 w-3.5" />
-                <span>Added</span>
-              </>
+              <Check className="w-4 h-4 text-[#22c55e]" />
             ) : (
-              <>
-                <ShoppingBag className="h-3.5 w-3.5" />
-                <span>Add</span>
-              </>
+              <Plus className="w-4 h-4 text-[#111111]" />
             )}
           </button>
-        </div>
+        )}
       </div>
 
-      {/* Product Info */}
-      <div className="mt-3.5 flex flex-col space-y-1 px-1">
-        <div className="flex items-center justify-between text-xs text-[#9a948e] uppercase tracking-wider font-medium">
-          <span>{product.category}</span>
-          {product.colors && product.colors.length > 1 && (
-            <span className="text-[11px] text-[#6d6a67] lowercase">
-              {product.colors.length} finishes
-            </span>
-          )}
-        </div>
-
-        <h3 className="text-[15px] font-medium text-[#1c1c1a] group-hover:text-[#b9836a] transition-colors leading-tight">
+      {/* Text below the image without product description */}
+      <div className="mt-2.5 sm:mt-3 text-left px-0 space-y-1">
+        <h3 className="text-[13px] sm:text-[14px] font-bold text-[#111111] uppercase tracking-[0.02em] truncate group-hover:underline">
           {product.title}
         </h3>
-
-        <div className="flex items-center gap-2 pt-0.5">
-          <span className="text-[15px] font-semibold text-[#1c1c1a]">
-            {formatPrice(product.price)}
+        <div className="flex items-center gap-2 text-[13px] sm:text-[14px] text-[#111111] leading-none">
+          <span className="font-normal">
+            Rs. {product.price.toFixed(2)}
           </span>
-          {product.originalPrice && (
-            <span className="text-xs text-[#9a948e] line-through">
-              {formatPrice(product.originalPrice)}
+          {hasSale && product.originalPrice && (
+            <span className="line-through text-[#999999] text-[11px] sm:text-[12px]">
+              Rs. {product.originalPrice.toFixed(2)}
             </span>
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };

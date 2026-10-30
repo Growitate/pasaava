@@ -33,7 +33,7 @@ export const BrandStorySection: React.FC<BrandStorySectionProps> = ({
   ];
 
   return (
-    <section className="py-20 md:py-28 bg-[#fafaf7] overflow-hidden">
+    <section className="py-16 md:py-24 bg-white overflow-hidden border-t border-[#E5E5E5]">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Left Column: Story & Image Banner */}
@@ -44,24 +44,24 @@ export const BrandStorySection: React.FC<BrandStorySectionProps> = ({
             transition={{ duration: 0.6 }}
             className="lg:col-span-6 relative"
           >
-            <div className="relative rounded-3xl overflow-hidden aspect-[4/5] shadow-2xl bg-[#1c1c1a] border border-[#e8e8e8]">
+            <div className="relative rounded-3xl overflow-hidden aspect-[4/5] shadow-xl bg-[#F3F3F3] border border-[#E5E5E5]">
               <img
                 src="/images/hero-masculine-atelier.jpg"
                 alt="PASAAVA Men's Atelier Craftsmanship"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
               {/* Floating Quote Card */}
-              <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md p-5 sm:p-6 rounded-2xl border border-white/40 shadow-xl">
-                <p className="font-serif italic text-base sm:text-lg text-[#1c1c1a] leading-snug">
+              <div className="absolute bottom-6 left-6 right-6 bg-black/75 backdrop-blur-md p-5 sm:p-6 rounded-2xl border border-white/15 shadow-xl">
+                <p className="font-serif italic text-base sm:text-lg text-white leading-snug">
                   "Men's jewelry shouldn't be fragile, exorbitant, or locked in a drawer. It should be built like armor—ready for every movement, sweat, and gesture."
                 </p>
                 <div className="mt-3 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-[#b9836a] uppercase tracking-wider">
+                  <span className="text-xs font-semibold text-white/90 uppercase tracking-wider">
                     PASAAVA Design Atelier
                   </span>
-                  <span className="text-xs text-[#9a948e]">Est. 2024</span>
+                  <span className="text-xs text-white/60">Est. 2024</span>
                 </div>
               </div>
             </div>
@@ -76,13 +76,10 @@ export const BrandStorySection: React.FC<BrandStorySectionProps> = ({
             className="lg:col-span-6 space-y-8"
           >
             <div className="space-y-4">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[#b9836a]">
-                The PASAAVA Philosophy
-              </span>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1c1c1a] leading-tight">
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#111111] leading-tight">
                 Precision Hardware Forged for the Modern Man
               </h2>
-              <p className="text-base text-[#6d6a67] leading-relaxed">
+              <p className="text-sm sm:text-[15px] font-normal text-[#6B6B6B] leading-relaxed">
                 At PASAAVA, we merge architectural minimalism with unyielding industrial durability. We bridge the gap between flimsy fast fashion and inaccessible bespoke jewelers, giving men heavyweight hardware that lasts a lifetime.
               </p>
             </div>
@@ -93,13 +90,13 @@ export const BrandStorySection: React.FC<BrandStorySectionProps> = ({
                 const Icon = pillar.icon;
                 return (
                   <div key={idx} className="space-y-2">
-                    <div className="w-10 h-10 rounded-xl bg-white border border-[#e8e8e8] flex items-center justify-center text-[#b9836a] shadow-xs">
+                    <div className="w-10 h-10 rounded-xl bg-[#F5F5F5] border border-[#E5E5E5] flex items-center justify-center text-[#111111] shadow-xs">
                       <Icon className="w-5 h-5" />
                     </div>
-                    <h4 className="text-sm font-semibold text-[#1c1c1a]">
+                    <h4 className="text-sm font-semibold text-[#111111]">
                       {pillar.title}
                     </h4>
-                    <p className="text-xs text-[#6d6a67] leading-relaxed">
+                    <p className="text-xs font-light text-[#6B6B6B] leading-relaxed">
                       {pillar.desc}
                     </p>
                   </div>
@@ -111,7 +108,7 @@ export const BrandStorySection: React.FC<BrandStorySectionProps> = ({
             <div className="pt-4 flex items-center gap-4">
               <button
                 onClick={() => onNavigate('/about')}
-                className="flex items-center gap-2 bg-[#1c1c1a] text-white px-7 py-3.5 rounded-full text-sm font-medium hover:bg-black transition-transform active:scale-95 shadow-md group cursor-pointer"
+                className="flex items-center gap-2 bg-[#111111] text-white px-7 py-3.5 rounded-full text-sm font-semibold hover:bg-[#333333] transition-all active:scale-95 shadow-sm group cursor-pointer"
               >
                 <span>About Our Craft</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -119,7 +116,7 @@ export const BrandStorySection: React.FC<BrandStorySectionProps> = ({
 
               <button
                 onClick={() => onNavigate('/journals')}
-                className="text-xs font-semibold uppercase tracking-wider text-[#1c1c1a] hover:text-[#b9836a] transition-colors py-2 px-3"
+                className="text-xs font-semibold uppercase tracking-wider text-[#6B6B6B] hover:text-[#111111] transition-colors py-2 px-3 cursor-pointer"
               >
                 Men's Style Journal
               </button>

@@ -1,111 +1,202 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ShieldCheck, Droplets, Sparkles, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Volume2, VolumeX } from 'lucide-react';
+import { storageService } from '../services/storageService';
 
 interface HeroSectionProps {
   onNavigate: (path: string) => void;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
+export const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate: _onNavigate }) => {
+  const [settings, setSettings] = useState(() => storageService.getSettings());
+  const [isMuted, setIsMuted] = useState(true);
+  const [isVideoReady, setIsVideoReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    return storageService.subscribe(() => {
+      setSettings(storageService.getSettings());
+    });
+  }, []);
+
+  // Update viewport state on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Standardize on universal H.264 MP4 format to ensure seamless playback across all browsers and devices
+  const rawDesktopVideo = (settings.heroVideoUrl && settings.heroVideoUrl !== '/videos/hero-banner.mp4')
+    ? settings.heroVideoUrl
+    : '/images/IMG_3889.mp4';
+  const desktopVideoUrl = rawDesktopVideo.toLowerCase().endsWith('.mov')
+    ? '/images/IMG_3889.mp4'
+    : rawDesktopVideo;
+
+  const desktopPoster = (settings.heroPoster && settings.heroPoster !== '/images/hero-masculine-bold.jpg')
+    ? settings.heroPoster
+    : '/images/hero-desktop-poster.jpg';
+
+  const rawMobileVideo = settings.heroMobileVideoUrl || '/images/IMG_3418.mp4';
+  const mobileVideoUrl = rawMobileVideo.toLowerCase().endsWith('.mov')
+    ? '/images/IMG_3418.mp4'
+    : rawMobileVideo;
+
+  const mobilePoster = settings.heroMobilePoster || '/images/hero-mobile-poster.jpg';
+
+  const currentVideoUrl = isMobile ? mobileVideoUrl : desktopVideoUrl;
+  const currentPoster = isMobile ? mobilePoster : desktopPoster;
+
+  // Function to ensure video always plays continuously without play/pause controls
+  const playActiveVideo = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.defaultMuted = true;
+    video.muted = isMuted;
+
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setIsVideoReady(true);
+        })
+        .catch(() => {
+          // If browser restricts unmuted autoplay, enforce muted state and retry
+          video.muted = true;
+          video.play()
+            .then(() => setIsVideoReady(true))
+            .catch(() => {});
+        });
+    }
+  }, [isMuted]);
+
+  useEffect(() => {
+    setIsVideoReady(false);
+    playActiveVideo();
+
+    // In case strict mobile browser policies require user engagement before video playback starts
+    const handleFirstUserGesture = () => {
+      playActiveVideo();
+      window.removeEventListener('touchstart', handleFirstUserGesture);
+      window.removeEventListener('click', handleFirstUserGesture);
+      window.removeEventListener('scroll', handleFirstUserGesture);
+    };
+
+    window.addEventListener('touchstart', handleFirstUserGesture, { passive: true });
+    window.addEventListener('click', handleFirstUserGesture, { passive: true });
+    window.addEventListener('scroll', handleFirstUserGesture, { passive: true });
+
+    return () => {
+      window.removeEventListener('touchstart', handleFirstUserGesture);
+      window.removeEventListener('click', handleFirstUserGesture);
+      window.removeEventListener('scroll', handleFirstUserGesture);
+    };
+  }, [currentVideoUrl, playActiveVideo]);
+
+  // Audio Mute/Unmute toggle only (video plays uninterrupted)
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const nextMuted = !isMuted;
+    setIsMuted(nextMuted);
+
+    if (videoRef.current) {
+      videoRef.current.muted = nextMuted;
+      videoRef.current.play().catch(() => {});
+    }
+  };
+
+  // If the browser or OS pauses playback (e.g. background tab or battery saver), auto-resume
+  const handleAutoResume = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const video = e.currentTarget;
+    if (!document.hidden && video.paused) {
+      video.play().catch(() => {});
+    }
+  };
+
   return (
-    <section className="relative w-full min-h-[92vh] sm:min-h-screen lg:min-h-[105vh] overflow-hidden bg-[#0c0c0c] flex flex-col justify-between select-none">
-      {/* 1. Full-Screen Cinematic Background Image */}
-      <div className="absolute inset-0 z-0">
+    <section
+      className="hero-banner-mobile relative w-full h-[calc(100vh-36px)] [height:calc(100dvh-36px)] min-h-[calc(100vh-36px)] [min-height:calc(100dvh-36px)] overflow-hidden bg-[#0c0c0c] select-none"
+    >
+      {/* Full-Width Background Video Container */}
+      <div className="absolute inset-0 z-0 overflow-hidden bg-[#0c0c0c]">
+        {/* Instant Poster Image: Shown immediately on load with zero flash while video streams */}
         <img
-          src="/images/hero-masculine-bold.jpg"
-          alt="PASAAVA — Bold Modern Men's Jewellery"
-          className="w-full h-full object-cover object-center pointer-events-none scale-105 transition-transform duration-1000 ease-out"
+          src={currentPoster}
+          alt="PASAAVA Hero"
+          fetchPriority="high"
+          decoding="async"
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none"
         />
-        {/* Cinematic gradient vignette for crisp typography readability and masculine moody depth */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/60 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-transparent to-black/60 pointer-events-none" />
+
+        {/* Optimized Video Stream - Mounted for active viewport to save bandwidth and guarantee smooth 60fps */}
+        <video
+          ref={videoRef}
+          key={currentVideoUrl}
+          autoPlay
+          muted={isMuted}
+          loop
+          playsInline
+          disablePictureInPicture
+          disableRemotePlayback
+          controls={false}
+          poster={currentPoster}
+          preload="auto"
+          onLoadedData={() => setIsVideoReady(true)}
+          onPlaying={() => setIsVideoReady(true)}
+          onPause={handleAutoResume}
+          style={{
+            transform: 'translate3d(0, 0, 0)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            willChange: 'opacity, transform'
+          }}
+          className={`absolute inset-0 w-full h-full object-cover object-center pointer-events-none transition-opacity duration-700 ease-out ${
+            isVideoReady ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <source src={currentVideoUrl} type="video/mp4" />
+        </video>
+
+        {/* Soft top gradient to blend smoothly with floating header */}
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/50 via-black/20 to-transparent pointer-events-none z-[1]" />
       </div>
 
-      {/* 2. Hero Content Container */}
-      <div className="relative z-10 w-full max-w-[1600px] mx-auto px-6 sm:px-12 lg:px-20 pt-36 sm:pt-44 lg:pt-52 pb-20 sm:pb-24 lg:pb-32 flex-1 flex flex-col justify-between">
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start h-full">
-          {/* Left Column: Exclusive Collection, Heading, Subtitle & CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7 flex flex-col justify-between max-w-2xl space-y-7 sm:space-y-10"
-          >
-            {/* Top Tag: / Exclusive Men's Hardware / */}
-            <div className="flex items-center gap-2.5 text-white/80 text-xs sm:text-base font-semibold tracking-[0.25em] uppercase">
-              <span className="text-[#b9836a]">/</span>
-              <span>Exclusive Men's Hardware</span>
-              <span className="text-[#b9836a]">/</span>
-            </div>
-
-            {/* Main Headline */}
-            <h1 className="font-sans font-bold text-white text-6xl sm:text-7xl md:text-8xl lg:text-[96px] xl:text-[108px] leading-[0.92] tracking-[-0.035em] drop-shadow-xl">
-              Engineered
-              <br />
-              Masculine
-              <br />
-              Elegance
-            </h1>
-
-            {/* Subheading & Button Container */}
-            <div className="pt-2 sm:pt-4 space-y-7 max-w-xl">
-              <p className="text-white/90 text-base sm:text-lg lg:text-[19px] font-normal leading-relaxed">
-                Architectural Cuban chains, solid signet rings, and engineered wristwear forged from 100% waterproof 316L surgical steel, titanium, and 18K gold. Built for the modern man.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 pt-2">
-                <button
-                  onClick={() => onNavigate('/shop')}
-                  className="bg-white text-[#0c0c0c] hover:bg-white/90 py-4.5 sm:py-5 px-8 sm:px-10 rounded-full font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-200 active:scale-[0.99] shadow-2xl cursor-pointer text-center flex items-center justify-center gap-2.5"
-                >
-                  <span>Explore Men's Collection</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-
-                <button
-                  onClick={() => onNavigate('/men-category/men-bestsellers')}
-                  className="bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/20 py-4.5 sm:py-5 px-7 sm:px-8 rounded-full font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-200 active:scale-[0.99] cursor-pointer text-center"
-                >
-                  Best Sellers
-                </button>
-              </div>
-
-              {/* Highlights Pill */}
-              <div className="pt-2 flex flex-wrap items-center gap-4 text-xs sm:text-sm text-white/80">
-                <span className="flex items-center gap-2">
-                  <Droplets className="w-4 h-4 text-[#b9836a]" />
-                  100% Waterproof & Sweatproof
-                </span>
-                <span>•</span>
-                <span className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-[#b9836a]" />
-                  2-Year Guarantee
-                </span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Right Column: Crafted For Legacy (Desktop Placement) */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 lg:h-full flex lg:flex-col lg:justify-end lg:items-end mt-12 lg:mt-0 pb-4 sm:pb-8 text-left lg:text-right"
-          >
-            <div className="space-y-4">
-              <span className="text-xs sm:text-sm uppercase tracking-[0.25em] text-[#b9836a] font-bold block">
-                PASAAVA Atelier
+      {/* Audio Mute / Unmute Control ONLY */}
+      <div className="hero-mute-btn absolute bottom-4 right-4 sm:bottom-6 sm:right-6 lg:bottom-8 lg:right-8 z-20">
+        <button
+          type="button"
+          onClick={toggleMute}
+          aria-label={isMuted ? 'Unmute video audio' : 'Mute video audio'}
+          title={isMuted ? 'Unmute audio' : 'Mute audio'}
+          className="group flex items-center gap-2 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-full bg-black/60 hover:bg-black/85 backdrop-blur-md border border-white/20 hover:border-white/40 text-white shadow-[0_4px_20px_rgba(0,0,0,0.35)] transition-all duration-200 cursor-pointer select-none focus:outline-none focus:ring-2 focus:ring-white/40 active:scale-95"
+        >
+          {isMuted ? (
+            <>
+              <VolumeX className="w-4 h-4 text-white/80 group-hover:text-white transition-colors" />
+              <span className="text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-white/90 group-hover:text-white transition-colors">
+                Sound Off
               </span>
-              <h2 className="font-sans font-bold text-white text-5xl sm:text-7xl md:text-8xl lg:text-[88px] xl:text-[98px] leading-[0.94] tracking-[-0.03em] drop-shadow-lg">
-                Forged For
-                <br />
-                Legacy
-              </h2>
-            </div>
-          </motion.div>
-        </div>
+            </>
+          ) : (
+            <>
+              <Volume2 className="w-4 h-4 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
+              <span className="text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-white transition-colors">
+                Sound On
+              </span>
+              <span className="flex items-end gap-[2px] h-3 w-3 ml-0.5" aria-hidden="true">
+                <span className="w-[2px] h-full bg-emerald-400 rounded-full animate-pulse" />
+                <span className="w-[2px] h-2/3 bg-emerald-400 rounded-full animate-pulse [animation-delay:150ms]" />
+                <span className="w-[2px] h-4/5 bg-emerald-400 rounded-full animate-pulse [animation-delay:300ms]" />
+              </span>
+            </>
+          )}
+        </button>
       </div>
     </section>
   );
 };
+

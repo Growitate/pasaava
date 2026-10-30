@@ -18,7 +18,7 @@ export const faqs: FAQItem[] = [
   },
   {
     question: 'How does shipping and delivery work?',
-    answer: 'We offer Free Worldwide Standard Shipping on all orders over $75. Orders are dispatched within 24 hours from our atelier. Standard delivery takes 3–5 business days within the US/UK and 6–10 business days worldwide. Express courier options are available at checkout.',
+    answer: 'We offer Free Express Shipping across India on all orders over ₹999. Orders are dispatched within 24 hours from our atelier. Standard delivery takes 2–4 business days with live SMS and WhatsApp tracking.',
     category: 'Shipping'
   },
   {

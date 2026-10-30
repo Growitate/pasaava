@@ -8,17 +8,16 @@ export interface Currency {
 }
 
 export const CURRENCIES: Record<string, Currency> = {
-  USD: { code: 'USD', symbol: '$', rate: 1, name: 'United States Dollar' },
-  EUR: { code: 'EUR', symbol: '€', rate: 0.92, name: 'Euro' },
-  GBP: { code: 'GBP', symbol: '£', rate: 0.78, name: 'British Pound' },
-  CAD: { code: 'CAD', symbol: 'CA$', rate: 1.35, name: 'Canadian Dollar' },
-  AUD: { code: 'AUD', symbol: 'AU$', rate: 1.52, name: 'Australian Dollar' }
+  INR: { code: 'INR', symbol: '₹', rate: 1, name: 'Indian Rupee' },
+  USD: { code: 'USD', symbol: '$', rate: 0.012, name: 'United States Dollar' },
+  EUR: { code: 'EUR', symbol: '€', rate: 0.011, name: 'Euro' },
+  GBP: { code: 'GBP', symbol: '£', rate: 0.0095, name: 'British Pound' }
 };
 
 interface CurrencyContextType {
   currency: Currency;
   setCurrencyCode: (code: string) => void;
-  formatPrice: (priceInUSD: number) => string;
+  formatPrice: (priceInINR: number) => string;
 }
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
@@ -26,13 +25,13 @@ const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined
 export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currencyCode, setCurrencyCodeState] = useState<string>(() => {
     try {
-      return localStorage.getItem('pasaava_currency') || localStorage.getItem('glintura_currency') || 'USD';
+      return localStorage.getItem('pasaava_currency') || 'INR';
     } catch {
-      return 'USD';
+      return 'INR';
     }
   });
 
-  const currency = CURRENCIES[currencyCode] || CURRENCIES.USD;
+  const currency = CURRENCIES[currencyCode] || CURRENCIES.INR;
 
   const setCurrencyCode = (code: string) => {
     if (CURRENCIES[code]) {
@@ -45,10 +44,14 @@ export const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  const formatPrice = (priceInUSD: number): string => {
-    const converted = priceInUSD * currency.rate;
-    // If it's a whole number or currency formatting
-    return `${currency.symbol}${Math.round(converted)}`;
+  const formatPrice = (priceInINR: number): string => {
+    const num = Math.round(Number(priceInINR) || 0);
+    // INR formatting: ₹750 or ₹1,200
+    if (currency.code === 'INR') {
+      return `₹${num.toLocaleString('en-IN')}`;
+    }
+    const converted = num * currency.rate;
+    return `${currency.symbol}${Math.round(converted).toLocaleString()}`;
   };
 
   return (

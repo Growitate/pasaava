@@ -12,17 +12,25 @@ export interface AccordionItemData {
 interface AccordionProps {
   items: AccordionItemData[];
   allowMultiple?: boolean;
-  variant?: 'minimal' | 'bordered';
+  variant?: 'minimal' | 'bordered' | 'pdp';
+  iconType?: 'plus-minus' | 'chevron';
+  className?: string;
+  titleClassName?: string;
 }
 
 export const Accordion: React.FC<AccordionProps> = ({
   items,
   allowMultiple = false,
-  variant = 'minimal'
+  variant = 'minimal',
+  iconType,
+  className = '',
+  titleClassName = ''
 }) => {
   const [openIds, setOpenIds] = useState<string[]>(() => {
     return items.filter((i) => i.defaultOpen).map((i) => i.id);
   });
+
+  const isPdp = variant === 'pdp' || variant === 'bordered' || iconType === 'chevron';
 
   const toggle = (id: string) => {
     if (allowMultiple) {
@@ -34,37 +42,81 @@ export const Accordion: React.FC<AccordionProps> = ({
     }
   };
 
+  if (isPdp) {
+    return (
+      <div className={`divide-y divide-[#E5E5E5] border-y border-[#E5E5E5] w-full ${className}`}>
+        {items.map((item) => {
+          const isOpen = openIds.includes(item.id);
+
+          return (
+            <div key={item.id} className="w-full">
+              <button
+                type="button"
+                onClick={() => toggle(item.id)}
+                className="w-full flex items-center justify-between text-left py-4 sm:py-4.5 transition-colors cursor-pointer group"
+                aria-expanded={isOpen}
+              >
+                <span
+                  className={
+                    titleClassName ||
+                    'text-sm font-semibold tracking-wider text-[#111111] uppercase font-sans'
+                  }
+                >
+                  {item.title}
+                </span>
+                <ChevronDown
+                  className={`w-4 h-4 text-[#111111] transition-transform duration-300 ease-out stroke-[1.75] ${
+                    isOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pb-5 pt-1 text-sm text-[#333333] leading-relaxed">
+                      {item.content}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
   return (
-    <div className={variant === 'bordered' ? 'divide-y divide-[#e8e8e8] border-y border-[#e8e8e8]' : 'space-y-3'}>
+    <div className={`space-y-3 ${className}`}>
       {items.map((item) => {
         const isOpen = openIds.includes(item.id);
 
         return (
           <div
             key={item.id}
-            className={
-              variant === 'bordered'
-                ? 'py-4'
-                : 'rounded-2xl border border-[#e8e8e8] bg-white overflow-hidden shadow-xs transition-colors'
-            }
+            className="rounded-2xl border border-[#E5E5E5] bg-white overflow-hidden shadow-xs transition-colors"
           >
             <button
+              type="button"
               onClick={() => toggle(item.id)}
-              className={`w-full flex items-center justify-between text-left transition-colors ${
-                variant === 'minimal' ? 'p-4 sm:p-5' : 'py-2'
-              }`}
+              className="w-full flex items-center justify-between text-left transition-colors cursor-pointer p-4 sm:p-5"
               aria-expanded={isOpen}
             >
-              <span className="text-sm sm:text-base font-medium text-[#1c1c1a]">
+              <span className="text-sm sm:text-base font-medium text-[#111111]">
                 {item.title}
               </span>
               <div
                 className={`w-7 h-7 rounded-full flex items-center justify-center transition-transform duration-200 ${
-                  variant === 'minimal'
-                    ? isOpen
-                      ? 'bg-[#1c1c1a] text-white'
-                      : 'bg-[#f5f4f0] text-[#1c1c1a]'
-                    : 'text-[#1c1c1a]'
+                  isOpen
+                    ? 'bg-[#111111] text-white'
+                    : 'bg-[#F5F5F5] text-[#111111] border border-[#E5E5E5]'
                 }`}
               >
                 {isOpen ? (
@@ -84,13 +136,7 @@ export const Accordion: React.FC<AccordionProps> = ({
                   transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                   className="overflow-hidden"
                 >
-                  <div
-                    className={`text-xs sm:text-sm text-[#6d6a67] leading-relaxed ${
-                      variant === 'minimal'
-                        ? 'px-4 sm:px-5 pb-5 pt-1 border-t border-[#f0f0f0]'
-                        : 'pb-4 pt-2'
-                    }`}
-                  >
+                  <div className="text-xs sm:text-sm font-light text-[#6B6B6B] leading-relaxed px-4 sm:px-5 pb-5 pt-1 border-t border-[#E5E5E5]">
                     {item.content}
                   </div>
                 </motion.div>
